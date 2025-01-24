@@ -2,11 +2,16 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-DATA_PATH = "Healthtest_2023reduced.csv"
+import os
+
 # 데이터 로드 및 캐싱
 @st.cache
 def load_data():
     try:
+        # 디버깅: 현재 디렉토리와 파일 확인
+        st.write(f"Current directory: {os.getcwd()}")
+        st.write("Files in the directory:", os.listdir(os.getcwd()))
+
         data = pd.read_csv('Healthtest_2023reduced.csv', encoding="utf-8")
         return data
     except UnicodeDecodeError:
@@ -57,3 +62,4 @@ if data is not None:
             st.error(f"Column '{bp_type}' not found in the dataset. Please check the column names.")
 else:
     st.error("Data could not be loaded. Please ensure the file exists and is correctly formatted.")
+
