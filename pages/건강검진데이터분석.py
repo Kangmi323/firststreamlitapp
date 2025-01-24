@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import koreanize_matplotlib
 import os
 
 # 데이터 로드 및 캐싱
@@ -14,14 +13,14 @@ def load_data():
         st.write("Files in the directory:", os.listdir(os.getcwd()))
 
         # 파일 경로 수정 (대소문자 정확히 지정)
-        data = pd.read_csv('Healthtest_2023reduced.CSV', encoding="utf-8")
+        data = pd.read_csv('Healthtest_2023reduced.CSV', encoding="cp949")  # 한글 인코딩 변경
         return data
     except UnicodeDecodeError:
         try:
-            data = pd.read_csv('Healthtest_2023reduced.CSV', encoding="latin1")  # 다른 일반적인 인코딩
+            data = pd.read_csv('Healthtest_2023reduced.CSV', encoding="utf-8")  # utf-8 시도
             return data
         except Exception as e:
-            st.error(f"Error loading data with 'latin1' encoding: {e}")
+            st.error(f"Error loading data with 'utf-8' encoding: {e}")
             return None
     except Exception as e:
         st.error(f"Error loading data: {e}")
