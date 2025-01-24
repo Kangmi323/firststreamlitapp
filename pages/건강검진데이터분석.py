@@ -37,11 +37,20 @@ if data is not None:
     st.write("Displaying the first few rows of the dataset:")
     st.dataframe(data.head())
 
+    # 컬럼 이름 출력
+    st.header("Column Names in Dataset")
+    st.write("Columns available in the dataset:")
+    st.write(data.columns.tolist())
+
     # 상관 분석 수행
     st.header("Identify Top Factors Correlated with Systolic and Diastolic Blood Pressure")
     numeric_data = data.select_dtypes(include=['float64', 'int64'])  # 숫자형 데이터만 선택
 
-    for bp_type in ["최고혈압", "최저혈압"]:
+    # 사용자 지정 혈압 관련 컬럼 이름
+    systolic_bp_column = st.text_input("Enter the column name for Systolic Blood Pressure (최고혈압):", "최고혈압")
+    diastolic_bp_column = st.text_input("Enter the column name for Diastolic Blood Pressure (최저혈압):", "최저혈압")
+
+    for bp_type in [systolic_bp_column, diastolic_bp_column]:
         if bp_type in numeric_data.columns:
             st.write(f"Calculating correlation with {bp_type}:")
             correlation_with_bp = numeric_data.corr()[bp_type].sort_values(ascending=False)
