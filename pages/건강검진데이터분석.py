@@ -1,23 +1,25 @@
 import streamlit as st
 import pandas as pd
 
-# 파일 경로 설정
-data_file = 'Healthtest_2023reduced.csv'
-
 # 데이터 로드 및 캐싱
 @st.cache
-def load_data(file_path):
+def load_data(file):
     try:
-        data = pd.read_csv(file_path)
+        data = pd.read_csv(file)
         return data
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return None
 
-data = load_data(data_file)
-
 # 앱 제목
 st.title("Health Test Data Analysis")
+
+# 파일 업로드
+uploaded_file = st.file_uploader("Upload your CSV file", type="csv")
+
+data = None
+if uploaded_file is not None:
+    data = load_data(uploaded_file)
 
 if data is not None:
     # 데이터프레임 표시
@@ -73,4 +75,4 @@ if data is not None:
     else:
         st.write("No filtered data available to download.")
 else:
-    st.error("Data could not be loaded. Please ensure the file exists and is correctly formatted.")
+    st.write("Please upload a CSV file to get started.")
