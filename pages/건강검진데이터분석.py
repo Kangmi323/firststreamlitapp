@@ -5,8 +5,15 @@ import pandas as pd
 @st.cache
 def load_data(file):
     try:
-        data = pd.read_csv(file)
+        data = pd.read_csv(file, encoding="utf-8")
         return data
+    except UnicodeDecodeError:
+        try:
+            data = pd.read_csv(file, encoding="latin1")  # 다른 일반적인 인코딩
+            return data
+        except Exception as e:
+            st.error(f"Error loading data with 'latin1' encoding: {e}")
+            return None
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return None
