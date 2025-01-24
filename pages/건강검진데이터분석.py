@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # 데이터 로드 및 캐싱
 @st.cache
@@ -19,7 +21,7 @@ def load_data(file):
         return None
 
 # 앱 제목
-st.title("Health Test Data Analysis")
+st.title("Health Test Data Correlation Analysis")
 
 # 파일 업로드
 uploaded_file = st.file_uploader("Upload your CSV file", type="csv")
@@ -34,52 +36,39 @@ if data is not None:
     st.write("Displaying the first few rows of the dataset:")
     st.dataframe(data.head())
 
-    # 데이터 통계 정보
-    st.header("Descriptive Statistics")
-    st.write("Statistical summary of numeric columns:")
-    st.write(data.describe())
+    # 상관 분석 수행
+    st.header("Correlation Analysis")
+    numeric_data = data.select_dtypes(include=['float64', 'int64'])  # 숫자형 데이터만 선택
 
-    # 컬럼 선택
-    st.header("Column Analysis")
-    selected_column = st.selectbox("Select a column for detailed analysis:", data.columns)
+    if not numeric_data.empty:
+        st.write("Calculating correlation matrix for numeric columns:")
+        correlation_matrix = numeric_data.corr()
 
-    if selected_column:
-        st.write(f"Displaying details for column: {selected_column}")
-        st.write(data[selected_column].describe())
+        # 상관 행렬 시각화
+        st.write("Correlation matrix:")
+        st.dataframe(correlation_matrix)
 
-        # 데이터 타입에 따른 시각화
-        if pd.api.types.is_numeric_dtype(data[selected_column]):
-            st.line_chart(data[selected_column])
-        else:
-            st.bar_chart(data[selected_column].value_counts())
+        st.write("Heatmap of the correlation matrix:")
+        fig, ax = plt.subplots(figsize=(10, 8))
+        sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap="coolwarm", ax=ax")
+        st.pyplot(fig)
 
-    # 데이터 필터링
-    st.header("Data Filtering")
-    filter_column = st.selectbox("Select a column to filter:", data.columns)
+        # 사용자 선택 기반 상관 관계 확인
+        st.header("Analyze Pairwise Correlation")
+        column_options = list(numeric_data.columns)
+        col1, col2 = st.selectbox("Select first column:", column_options), st.selectbox("Select second column:", column_options)
 
-    if filter_column:
-        unique_values = data[filter_column].unique()
-        selected_values = st.multiselect(
-            f"Select values from column '{filter_column}':", unique_values
-        )
+        if col1 and col2:
+            correlation_value = numeric_data[col1].corr(numeric_data[col2])
+            st.write(f"Correlation between {col1} and {col2}: {correlation_value:.2f}")
 
-        if selected_values:
-            filtered_data = data[data[filter_column].isin(selected_values)]
-            st.write(f"Filtered data based on {filter_column} values:")
-            st.dataframe(filtered_data)
-
-    # 데이터 저장 옵션
-    st.header("Download Filtered Data")
-    st.write("You can download the filtered dataset as a CSV file.")
-    if 'filtered_data' in locals():
-        csv = filtered_data.to_csv(index=False)
-        st.download_button(
-            label="Download CSV",
-            data=csv,
-            file_name="filtered_data.csv",
-            mime="text/csv"
-        )
+            # 산점도 그리기
+            st.write(f"Scatter plot of {col1} vs {col2}:")
+            fig, ax = plt.subplots()
+            sns.scatterplot(x=numeric_data[col1], y=numeric_data[col2], ax=ax)
+            ax.set_title(f"Scatter plot of {col1} vs {col2}")
+            st.pyplot(fig)
     else:
-        st.write("No filtered data available to download.")
+        st.write("No numeric columns available for correlation analysis.")
 else:
     st.write("Please upload a CSV file to get started.")
