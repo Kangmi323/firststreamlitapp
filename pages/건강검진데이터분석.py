@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+DATA_PATH = "Healthtest_2023reduced.csv"
 # 데이터 로드 및 캐싱
 @st.cache
 def load_data():
