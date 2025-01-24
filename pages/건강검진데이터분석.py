@@ -12,11 +12,12 @@ def load_data():
         st.write(f"Current directory: {os.getcwd()}")
         st.write("Files in the directory:", os.listdir(os.getcwd()))
 
-        data = pd.read_csv("Healthtest_2023reduced.csv", encoding="utf-8")
+        # 파일 경로 수정 (대소문자 정확히 지정)
+        data = pd.read_csv('Healthtest_2023reduced.CSV', encoding="utf-8")
         return data
     except UnicodeDecodeError:
         try:
-            data = pd.read_csv("Healthtest_2023reduced.csv", encoding="latin1")  # 다른 일반적인 인코딩
+            data = pd.read_csv('Healthtest_2023reduced.CSV', encoding="latin1")  # 다른 일반적인 인코딩
             return data
         except Exception as e:
             st.error(f"Error loading data with 'latin1' encoding: {e}")
@@ -62,4 +63,3 @@ if data is not None:
             st.error(f"Column '{bp_type}' not found in the dataset. Please check the column names.")
 else:
     st.error("Data could not be loaded. Please ensure the file exists and is correctly formatted.")
-
