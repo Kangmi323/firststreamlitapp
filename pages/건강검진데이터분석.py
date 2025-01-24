@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import koreanize_matplotlib
 import os
 
 # 데이터 로드 및 캐싱
