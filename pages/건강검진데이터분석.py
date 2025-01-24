@@ -12,11 +12,11 @@ def load_data():
         st.write(f"Current directory: {os.getcwd()}")
         st.write("Files in the directory:", os.listdir(os.getcwd()))
 
-        data = pd.read_csv('Healthtest_2023reduced.csv', encoding="utf-8")
+        data = pd.read_csv("Healthtest_2023reduced.csv", encoding="utf-8")
         return data
     except UnicodeDecodeError:
         try:
-            data = pd.read_csv('Healthtest_2023reduced.csv', encoding="latin1")  # 다른 일반적인 인코딩
+            data = pd.read_csv("Healthtest_2023reduced.csv", encoding="latin1")  # 다른 일반적인 인코딩
             return data
         except Exception as e:
             st.error(f"Error loading data with 'latin1' encoding: {e}")
