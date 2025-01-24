@@ -68,10 +68,10 @@ if data is not None:
         for i, factor in enumerate(top_factors, 1):
             st.write(f"{i}. {factor} (Correlation: {correlation_with_bp_combined[factor]:.2f})")
 
-        # 산점도 그리기
+        # 산점도 및 상관계수 시각화
         st.header("Scatter Plots of Top Factors vs Blood Pressure")
         for factor in top_factors:
-            st.write(f"Scatter plot of {factor} vs Blood Pressure:")
+            st.write(f"Scatter plot of {factor} vs Blood Pressure (Correlation: {correlation_with_bp_combined[factor]:.2f}):")
             fig, ax = plt.subplots()
             sns.scatterplot(x=numeric_data[factor], y=bp_combined, ax=ax)
             ax.set_title(f"{factor} vs Blood Pressure")
