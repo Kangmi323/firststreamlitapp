@@ -50,7 +50,7 @@ if data is not None:
 
         st.write("Heatmap of the correlation matrix:")
         fig, ax = plt.subplots(figsize=(10, 8))
-        sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap="coolwarm", ax=ax")
+        sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap="coolwarm", ax=ax)
         st.pyplot(fig)
 
         # 사용자 선택 기반 상관 관계 확인
